@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-@TeleOp(name = "driver teleop (new)", group = "14174")
+@TeleOp(name = "Teleop Test", group = "14174")
 public class TeleopTest extends LinearOpMode {
     public DcMotor front_left;
     public DcMotor front_right;
