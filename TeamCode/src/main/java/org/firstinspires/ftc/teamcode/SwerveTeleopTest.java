@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
-@TeleOp(name = "Teleop Test", group = "14174")
-public class TeleopTest extends LinearOpMode {
+@TeleOp(name = "SwerveTeleopTest", group = "14174")
+public class SwerveTeleopTest extends LinearOpMode {
     public DcMotor front_left;
     public DcMotor front_right;
     public DcMotor back_left;
@@ -67,7 +66,6 @@ public class TeleopTest extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
-            double spool = -gamepad2.right_stick_y;
             double botHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle + offset;
 
             // Rotate the movement direction counter to the bot's rotation
@@ -86,25 +84,24 @@ public class TeleopTest extends LinearOpMode {
             // at least one is out of the range [-1, 1]
 
 
-            if(gamepad1.right_trigger > 0.1) {
-                front_left.setPower( 0.4 *frontLeftPower);
+            if(gamepad1.left_trigger > 0.1) {
+                front_left.setPower( 0.4 * frontLeftPower);
                 back_left.setPower(0.4 * backLeftPower);
                 front_right.setPower(0.4 * frontRightPower);
                 back_right.setPower(0.4 * backRightPower);
-            } else if (gamepad1.left_trigger > 0.1) {
+            } else if (gamepad1.right_trigger > 0.1) {
                 front_left.setPower(frontLeftPower);
                 back_left.setPower(backLeftPower);
                 front_right.setPower(frontRightPower);
                 back_right.setPower(backRightPower);
             } else {
-                front_left.setPower( 0.7 *frontLeftPower);
+                front_left.setPower( 0.7 * frontLeftPower);
                 back_left.setPower(0.7 * backLeftPower);
                 front_right.setPower(0.7 * frontRightPower);
                 back_right.setPower(0.7 * backRightPower);
             }
 
             if(gamepad1.right_bumper) {
-
                 offset = -botHeading;
             }
 
@@ -112,7 +109,6 @@ public class TeleopTest extends LinearOpMode {
 
 
 
-            telemetry.addData("GamePad2Pos", gamepad2.left_stick_y);
             telemetry.addData("Status", "Running");
 
             telemetry.addData("heading", Math.toDegrees(botHeading));

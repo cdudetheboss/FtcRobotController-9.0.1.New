@@ -27,8 +27,6 @@ public class servoTest extends LinearOpMode {
     Servo Servo2;
     Servo Servo3;
     Servo Servo4;
-    //CRServo CRServo1;
-    //Servo kicker;
 
 
     @Override
@@ -37,17 +35,15 @@ public class servoTest extends LinearOpMode {
         telemetry.update();
 
         Servo1 = hardwareMap.servo.get("plug");
-
-       Servo2 = hardwareMap.servo.get("plugArm");
-        //Servo3 = hardwareMap.servo.get("cap");
-        //Servo4 = hardwareMap.servo.get("gate");
-        //CRServo1 = hardwareMap.crservo.get("slide");
+        Servo2 = hardwareMap.servo.get("plugArm");
+        //Servo3 = hardwareMap.servo.get("NAME");
+        //Servo4 = hardwareMap.servo.get("NAME");
 
         //Servo1.setPosition(0.7);
-        // Wait for the game to start (driver presses PLAY)
+        //Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-       // Servo2.setDirection(Servo.Direction.FORWARD);
+        //Servo2.setDirection(Servo.Direction.FORWARD);
         Servo1.setDirection(Servo.Direction.FORWARD);
         Servo2.setDirection(Servo.Direction.FORWARD);
         //Servo1.setPosition(0.5);
@@ -129,15 +125,5 @@ public class servoTest extends LinearOpMode {
                 telemetry.addData("Direction", Servo2.getDirection());
                 telemetry.update();
             }*/
-
-
-            /*if(gamepad1.a) {
-                CRServo1.setPower(1);
-            } else if(gamepad1.b) {
-                CRServo1.setPower(-1);
-            } else {
-                CRServo1.setPower(0);
-            }
-             */
     }
 }
