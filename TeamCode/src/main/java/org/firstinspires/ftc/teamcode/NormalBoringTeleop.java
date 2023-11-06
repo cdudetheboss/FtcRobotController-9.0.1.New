@@ -46,9 +46,7 @@ public class NormalBoringTeleop extends LinearOpMode {
     public DcMotor front_right;
     public DcMotor back_left;
     public DcMotor back_right;
-    public DcMotor slide;
-    public Servo plug;
-    public Servo plugArm;
+
 
     //other motors
 
@@ -75,15 +73,12 @@ public class NormalBoringTeleop extends LinearOpMode {
         front_right = hardwareMap.get(DcMotor.class, "front_right");
         back_left = hardwareMap.get(DcMotor.class, "back_left");
         back_right = hardwareMap.get(DcMotor.class, "back_right");
-        slide = hardwareMap.get(DcMotor.class, "slide");
-        plug = hardwareMap.get(Servo.class, "plug");
-        plugArm = hardwareMap.get(Servo.class, "plugArm");
+
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
@@ -91,7 +86,7 @@ public class NormalBoringTeleop extends LinearOpMode {
 
 
 
-        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         front_right.setDirection(DcMotorSimple.Direction.FORWARD);
         back_left.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -99,9 +94,6 @@ public class NormalBoringTeleop extends LinearOpMode {
         back_right.setDirection(DcMotorSimple.Direction.FORWARD);
         //Servo Speed
 
-        //Servo Positions
-        plug.setPosition(0.03);
-        plugArm.setPosition(0.69);
 
         robot.init(hardwareMap);
 
@@ -110,7 +102,6 @@ public class NormalBoringTeleop extends LinearOpMode {
         double forward = -gamepad1.left_stick_y;
         double right = gamepad1.left_stick_x;
         double clockwise = gamepad1.right_stick_x;
-        double spool = -gamepad2.right_stick_y;
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -166,18 +157,10 @@ public class NormalBoringTeleop extends LinearOpMode {
                 clockwise = 0;
             }
 
-            if (Math.abs(gamepad2.right_stick_y) > 0.01) {
-                if (gamepad2.right_stick_y > 0) {
-                    spool = -(gamepad2.right_stick_y * gamepad2.right_stick_y);
-                } else if (gamepad2.right_stick_y < 0) {
-                    spool = (gamepad2.right_stick_y * gamepad2.right_stick_y);
-                }
-            } else {
-                spool = 0;
-            }
             if (gamepad1.right_bumper) {
                 right = -right;
             }
+
            if((forward > 0) &! (gamepad1.left_trigger > 0.1)) {
                clockwise = Range.clip(clockwise + (-0.035 * forward) + (0.035 * right), -1, 1 );
            }
@@ -201,44 +184,14 @@ public class NormalBoringTeleop extends LinearOpMode {
                 back_left.setPower(0.5 * Range.clip(forward + clockwise - right, -1, 1));
                 back_right.setPower(0.5 * Range.clip(forward - clockwise + right, -1, 1));
             }
-            if (spool !=0) {
-                slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                slide.setPower(spool);
-            } else  if (spool == 0 && gamepad2.right_trigger > 0.01){
-                slide.setTargetPosition(slide.getCurrentPosition());
-                slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slide.setPower(1);
-            } else {
-                slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                slide.setPower(0);
-            }
+
 
 
             //ServoTest
-            if(gamepad1.a) {
-                plug.setPosition(0.42);
-            }
-            if (gamepad1.b) {
-                plug.setPosition(0.03);
-            }
-            if(gamepad2.a) {
-                plugArm.setPosition(0.69);
-            }
-            if(gamepad2.b) {
-                plugArm.setPosition(0.1);
-            }
-            if(gamepad2.x) {
-                plugArm.setPosition(plugArm.getPosition() - 0.01);
-            }
-            if(gamepad2.y) {
-                plugArm.setPosition(plugArm.getPosition() + 0.01);
-            }
-            telemetry.addData("Servo Position", plug.getPosition());
-            telemetry.addData("Servo Position", plugArm.getPosition());
-            telemetry.addData("Spool Position", slide.getCurrentPosition());
+
+
             telemetry.addData("GamePad2Pos", gamepad2.left_stick_y);
             telemetry.addData("Status", "Running");
-            telemetry.addData("slidePosition", slide.getCurrentPosition());
             telemetry.update();
         }
 

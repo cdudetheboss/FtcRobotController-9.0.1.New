@@ -103,7 +103,7 @@ public class jankSwerve extends LinearOpMode {
 
 
                 if(gamepad1.right_trigger > 0.1) {
-                    front_left.setPower( 0.4 *frontLeftPower);
+                    front_left.setPower(0.4 * frontLeftPower);
                     back_left.setPower(0.4 * backLeftPower);
                     front_right.setPower(0.4 * frontRightPower);
                     back_right.setPower(0.4 * backRightPower);
