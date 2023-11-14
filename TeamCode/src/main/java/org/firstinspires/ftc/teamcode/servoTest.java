@@ -28,7 +28,6 @@ public class servoTest extends LinearOpMode {
     Servo Servo3;
     Servo Servo4;
 
-
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");

@@ -6,10 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuParameters;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @TeleOp(name = "SwerveTeleopTest", group = "14174")
 public class SwerveTeleopTest extends LinearOpMode {
@@ -17,7 +21,10 @@ public class SwerveTeleopTest extends LinearOpMode {
     public DcMotor front_right;
     public DcMotor back_left;
     public DcMotor back_right;
+    double botHeading = 0;
     double offset = 0;
+
+    double headingResetValue;
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
@@ -45,6 +52,7 @@ public class SwerveTeleopTest extends LinearOpMode {
 
 
         BNO055IMU imu;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         // Retrieve the IMU from the hardware map
         BNO055IMU.Parameters parameters2 = new BNO055IMU.Parameters();
         parameters2.angleUnit = BNO055IMU.AngleUnit.RADIANS;
@@ -53,7 +61,7 @@ public class SwerveTeleopTest extends LinearOpMode {
         parameters2.loggingEnabled = true;
         parameters2.loggingTag = "IMU";
         parameters2.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
         // Adjust the orientation parameters to match your robot
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters2);
@@ -66,7 +74,10 @@ public class SwerveTeleopTest extends LinearOpMode {
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
-            double botHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle + offset;
+            if(gamepad1.right_bumper) {
+                offset = -botHeading;
+            }
+            botHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle + offset;
 
             // Rotate the movement direction counter to the bot's rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
@@ -101,9 +112,7 @@ public class SwerveTeleopTest extends LinearOpMode {
                 back_right.setPower(0.7 * backRightPower);
             }
 
-            if(gamepad1.right_bumper) {
-                offset = -botHeading;
-            }
+
 
 
 
@@ -111,7 +120,7 @@ public class SwerveTeleopTest extends LinearOpMode {
 
             telemetry.addData("Status", "Running");
 
-            telemetry.addData("heading", Math.toDegrees(botHeading));
+            telemetry.addData("heading", (Math.toDegrees(botHeading)));
             telemetry.update();
         }
     }
