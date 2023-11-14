@@ -6,24 +6,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuParameters;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name = "SwerveTeleopTest", group = "14174")
-public class SwerveTeleopTest extends LinearOpMode {
+@TeleOp(name = "Center_Stage_Teleop", group = "14174")
+public class Center_Stage_Teleop extends LinearOpMode {
     public DcMotor front_left;
     public DcMotor front_right;
     public DcMotor back_left;
     public DcMotor back_right;
+    public DcMotor lift;
     double botHeading = 0;
     double offset = 0;
-
+    int maxCap = 500;
     double headingResetValue;
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -32,6 +29,7 @@ public class SwerveTeleopTest extends LinearOpMode {
         front_right = hardwareMap.get(DcMotor.class, "front_right");
         back_left = hardwareMap.get(DcMotor.class, "back_left");
         back_right = hardwareMap.get(DcMotor.class, "back_right");
+        lift = hardwareMap.get(DcMotor.class, "lift");
 
 
         // Reverse the right side motors
@@ -40,13 +38,15 @@ public class SwerveTeleopTest extends LinearOpMode {
         back_left.setDirection(DcMotorSimple.Direction.REVERSE);
         front_left.setDirection(DcMotorSimple.Direction.REVERSE);
         back_right.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
@@ -78,11 +78,22 @@ public class SwerveTeleopTest extends LinearOpMode {
                 offset = -botHeading;
             }
             botHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle + offset;
-
+            double liftPosition = lift.getCurrentPosition();
             // Rotate the movement direction counter to the bot's rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
+        if(gamepad1.dpad_up) {
+            lift.setPower(0.8);
+            if(liftPosition>maxCap) {
+                lift.setPower(0);
+            }
+        }
+        if(gamepad1.dpad_down) {
+            lift.setPower(-0.8);
+            if (liftPosition<=0) {
+                lift.setPower(0);
+            }
+        }
 
 
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
@@ -96,7 +107,7 @@ public class SwerveTeleopTest extends LinearOpMode {
 
 
             if(gamepad1.left_trigger > 0.1) {
-                front_left.setPower( 0.4 * frontLeftPower);
+                front_left.setPower(0.4 * frontLeftPower);
                 back_left.setPower(0.4 * backLeftPower);
                 front_right.setPower(0.4 * frontRightPower);
                 back_right.setPower(0.4 * backRightPower);

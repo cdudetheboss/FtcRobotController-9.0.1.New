@@ -162,11 +162,11 @@ public class testauto extends LinearOpMode {
 
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    driveSBTest(450, 0.5, 6, 0, 5); //drive forward
+                    driveSBTest(450, 0.5, 6, 0, 5); //drive forward (pushing the pixel onto the mark)
                     sleep(500);
-                    driveSBTest(-450, .6, 6, 0, 5); //go back to start
+                    driveSBTest(-450, 0.5, 6, 0, 5); //go back to start
                     sleep(500);
-                    driveLRTest(2000, 0.5, 4, 0, 5);
+                    driveLRTest(2000, 0.5, 4, 0, 5); //go park in da corner
                     sleep(500);
                     opState++;
                 }
