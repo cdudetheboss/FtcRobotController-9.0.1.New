@@ -20,7 +20,7 @@ public class Center_Stage_Teleop extends LinearOpMode {
     public DcMotor lift;
     double botHeading = 0;
     double offset = 0;
-    int maxCap = 500;
+    //int maxCap = 1500;
     double headingResetValue;
     public void runOpMode() throws InterruptedException {
         // Declare our motors
@@ -84,9 +84,9 @@ public class Center_Stage_Teleop extends LinearOpMode {
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
         if(gamepad1.dpad_up) {
             lift.setPower(0.8);
-            if(liftPosition>maxCap) {
+           /* if(liftPosition>maxCap) {
                 lift.setPower(0);
-            }
+            } */
         }
         if(gamepad1.dpad_down) {
             lift.setPower(-0.8);
@@ -117,7 +117,7 @@ public class Center_Stage_Teleop extends LinearOpMode {
                 front_right.setPower(frontRightPower);
                 back_right.setPower(backRightPower);
             } else {
-                front_left.setPower( 0.7 * frontLeftPower);
+                front_left.setPower(0.7 * frontLeftPower);
                 back_left.setPower(0.7 * backLeftPower);
                 front_right.setPower(0.7 * frontRightPower);
                 back_right.setPower(0.7 * backRightPower);
@@ -130,7 +130,7 @@ public class Center_Stage_Teleop extends LinearOpMode {
 
 
             telemetry.addData("Status", "Running");
-
+            telemetry.addData("LiftPosition", liftPosition);
             telemetry.addData("heading", (Math.toDegrees(botHeading)));
             telemetry.update();
         }

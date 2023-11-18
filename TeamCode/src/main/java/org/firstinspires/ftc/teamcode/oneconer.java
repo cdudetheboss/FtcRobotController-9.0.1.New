@@ -97,8 +97,8 @@ public class oneconer extends LinearOpMode {
         robot.front_right.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.back_left.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.back_right.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.slide.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.plug.setDirection(Servo.Direction.FORWARD);
+       // robot.slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        //robot.plug.setDirection(Servo.Direction.FORWARD);
         //drivetrain = new MecanumDrivetrain(new DcMotor[] {robot.front_left, robot.front_right, robot.back_left, robot.back_right});
 
         //CODE FOR SETTING UP AND INITIALIZING IMU
@@ -115,7 +115,7 @@ public class oneconer extends LinearOpMode {
         robot.back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // robot.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         idle();
 
@@ -124,16 +124,16 @@ public class oneconer extends LinearOpMode {
         robot.front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.slide.setTargetPosition(robot.coneHome);
+      /*  robot.slide.setTargetPosition(robot.coneHome);
         robot.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.plug.setPosition(robot.plugDrop);
-        robot.plugArm.setPosition(robot.armIn);
+        robot.plugArm.setPosition(robot.armIn); */
 
         robot.back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //DEFINE SENSORS
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -162,7 +162,7 @@ public class oneconer extends LinearOpMode {
             telemetry.addData("Values", valBot + "   " + valTop);
 
             //DEGREES ARE FLIPPED "-" TURNS RIGHT AND "+" TURNS LEFT
-            if (valTop <= 200 && valBot <= 200 && opState == 0) {
+           /* if (valTop <= 200 && valBot <= 200 && opState == 0) {
                 depositcam.closeCameraDevice();
 
                 opState++;
@@ -286,7 +286,7 @@ public class oneconer extends LinearOpMode {
                     stop();
 
                 }
-            }
+            } */
         }
     }
     //FUNCTIONS

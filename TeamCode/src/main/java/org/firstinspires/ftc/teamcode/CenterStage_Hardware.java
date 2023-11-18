@@ -13,16 +13,9 @@ public class CenterStage_Hardware
     public DcMotor front_right;
     public DcMotor back_left;
     public DcMotor back_right;
-    public DcMotor slide;
-    public Servo plug;
-    public Servo plugArm;
 
-    //Servo Numbers
-    public final double plugDrop = 0.03;
-    public final double plugOpen = 0.42;
-    public final double armIn = 0.77; //change to 0.58 if any problems happen1
-    public final int coneHome = 0;
-    public final int lowJ = 1400;
+    //Servo/Motor Numbers
+
 
 
 
@@ -46,9 +39,7 @@ public class CenterStage_Hardware
         front_right = hwMap.get(DcMotor.class, "front_right");
         back_left = hwMap.get(DcMotor.class, "back_left");
         back_right = hwMap.get(DcMotor.class, "back_right");
-        slide = hwMap.get(DcMotor.class, "slide");
-        plug = hwMap.servo.get("plug");
-        plugArm = hwMap.servo.get("plugArm");
+
 
 
     }
