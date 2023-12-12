@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -32,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name= "Auto(Test)", group="14174")
+@Autonomous(name= "Center_Stage_Auto", group="14174")
 //@Disabled//comment out this line before using
-public class testauto extends LinearOpMode {
+public class Center_Stage_Auto extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -97,7 +96,6 @@ public class testauto extends LinearOpMode {
         robot.front_right.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.back_left.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.back_right.setDirection(DcMotorSimple.Direction.FORWARD);
-        //drivetrain = new MecanumDrivetrain(new DcMotor[] {robot.front_left, robot.front_right, robot.back_left, robot.back_right});
 
         //CODE FOR SETTING UP AND INITIALIZING IMU
         BNO055IMU.Parameters parameters2 = new BNO055IMU.Parameters();
@@ -162,11 +160,9 @@ public class testauto extends LinearOpMode {
 
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    driveSBTest(1000, 0.5, 6, 0, 5); //drive forward (pushing the pixel onto the mark)
+                    turn(90, 0.5, 2);
                     sleep(500);
-                    driveSBTest(-1000, 0.5, 6, 0, 5); //go back to start
-                    sleep(500);
-                    driveLRTest(3500, 0.5, 4, 0, 5); //go park in da corner
+                    driveSBTest(-1000, 0.4, 3, 90, 20);
                     sleep(500);
                     opState++;
                 }
@@ -178,7 +174,7 @@ public class testauto extends LinearOpMode {
     }
     //FUNCTIONS
     public void driveSBTest (double duration, double speedPercent, double error, double heading, double time) {
-        double position = robot.back_right.getCurrentPosition();
+        double position = robot.front_left.getCurrentPosition();
         double target = position + duration;
         double distanceToTargetStart = Math.abs(target - position);
         double distanceToTarget = target - position;
@@ -189,7 +185,7 @@ public class testauto extends LinearOpMode {
         double startTime = getRuntime();
 
         while (Math.abs(distanceToTarget) > error && !isStopRequested() && getRuntime() < startTime + time) {
-            position = robot.back_right.getCurrentPosition();
+            position = robot.front_left.getCurrentPosition();
             distanceToTarget = target - position;
             percentToTarget = distanceToTarget/distanceToTargetStart;
             if (percentToTarget >= 0) {
@@ -216,7 +212,7 @@ public class testauto extends LinearOpMode {
             wheelSpeed[2] = Range.clip(speed, -0.9, 0.9) + Range.clip(turnSpeed, -0.1, 0.1);
             wheelSpeed[3] = Range.clip(speed, -0.9, 0.9) - Range.clip(turnSpeed, -0.1, 0.1);
 
-            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], wheelSpeed[2], wheelSpeed[3]);
+            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], -wheelSpeed[2], -wheelSpeed[3]);
         };
 
         wheelSpeed[0] = 0;
@@ -323,7 +319,7 @@ public class testauto extends LinearOpMode {
     };
 
     public void driveLRTest (double duration, double speedPercent, double error, double heading, double time) {
-        double position = robot.back_right.getCurrentPosition();
+        double position = robot.front_left.getCurrentPosition();
         double target = position + duration;
         double distanceToTargetStart = Math.abs(target - position);
         double distanceToTarget = target - position;
@@ -334,7 +330,7 @@ public class testauto extends LinearOpMode {
         double startTime = getRuntime();
 
         while (Math.abs(distanceToTarget) > error && !isStopRequested() && getRuntime() < startTime + time) {
-            position = robot.back_right.getCurrentPosition();
+            position = robot.front_left.getCurrentPosition();
             distanceToTarget = target - position;
             percentToTarget = distanceToTarget/distanceToTargetStart;
             if (percentToTarget >= 0) {
@@ -360,7 +356,7 @@ public class testauto extends LinearOpMode {
             wheelSpeed[2] = -Range.clip(speed, -0.9, 0.9) + Range.clip(turnSpeed, -0.1, 0.1);
             wheelSpeed[3] = Range.clip(speed, -0.9, 0.9) - Range.clip(turnSpeed, -0.1, 0.1);
 
-            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], wheelSpeed[2], wheelSpeed[3]);
+            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], -wheelSpeed[2], -wheelSpeed[3]);
         };
 
         wheelSpeed[0] = 0;
