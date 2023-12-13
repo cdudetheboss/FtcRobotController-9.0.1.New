@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name= "Center_Stage_Auto", group="14174")
+@Autonomous(name= "Center_Stage_AutoBL", group="14174")
 //@Disabled//comment out this line before using
-public class Center_Stage_Auto extends LinearOpMode {
+public class Center_Stage_AutoBL extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -156,19 +156,26 @@ public class Center_Stage_Auto extends LinearOpMode {
 
             //DEGREES ARE FLIPPED "-" TURNS RIGHT AND "+" TURNS LEFT
 
-                depositcam.closeCameraDevice();
+            depositcam.closeCameraDevice();
 
+            opState++;
+            if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
+                sleep(250);
+                driveSBTest(1015, 0.2885, 5, 0, 3);
+                sleep(500);
+                driveSBTest(-1005, 0.2885, 5, 0, 5);
+                sleep(500);
+                turn(-90, 0.40, 5);
+                sleep(500);
+                driveSBTest(-950, 0.40, 5, -90, 20);
+                sleep(500);
+                turn(0, 0.30, 3);
+                sleep(500);
                 opState++;
-                if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    turn(90, 0.5, 2);
-                    sleep(500);
-                    driveSBTest(-1000, 0.4, 3, 90, 20);
-                    sleep(500);
-                    opState++;
-                }
-                if (opState == 2 && opModeIsActive()) {
-                    stop();
-                }
+            }
+            if (opState == 2 && opModeIsActive()) {
+                stop();
+            }
 
         }
     }
