@@ -108,7 +108,7 @@ public class Center_Stage_AutoRLBR extends LinearOpMode {
 
         //Reset Encoders
         robot.front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         robot.front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -116,7 +116,7 @@ public class Center_Stage_AutoRLBR extends LinearOpMode {
         idle();
 
         //Set the Run Mode For The Motors
-        robot.back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  //Controls the speed of the motors to be consistent even at different battery levels
+        //Controls the speed of the motors to be consistent even at different battery levels
         robot.front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -160,15 +160,13 @@ public class Center_Stage_AutoRLBR extends LinearOpMode {
 
             opState++;
             if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                sleep(250);
-                driveSBTest(1015, 0.2885, 5, 0, 3);
+                driveSBTest(1035, 0.4, 5, 0, 5);
                 sleep(500);
-                driveSBTest(-1005, 0.2885, 5, 0, 5);
-                sleep(500);
-                opState++;
+                driveSBTest(-975, 0.4, 5, 0, 5);
+                stop();
             }
             if (opState == 2 && opModeIsActive()) {
-                stop();
+
             }
 
         }
@@ -213,7 +211,7 @@ public class Center_Stage_AutoRLBR extends LinearOpMode {
             wheelSpeed[2] = Range.clip(speed, -0.9, 0.9) + Range.clip(turnSpeed, -0.1, 0.1);
             wheelSpeed[3] = Range.clip(speed, -0.9, 0.9) - Range.clip(turnSpeed, -0.1, 0.1);
 
-            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], -wheelSpeed[2], -wheelSpeed[3]);
+            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], wheelSpeed[2], wheelSpeed[3]);
         };
 
         wheelSpeed[0] = 0;
@@ -357,7 +355,7 @@ public class Center_Stage_AutoRLBR extends LinearOpMode {
             wheelSpeed[2] = -Range.clip(speed, -0.9, 0.9) + Range.clip(turnSpeed, -0.1, 0.1);
             wheelSpeed[3] = Range.clip(speed, -0.9, 0.9) - Range.clip(turnSpeed, -0.1, 0.1);
 
-            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], -wheelSpeed[2], -wheelSpeed[3]);
+            motorSetSpeed(wheelSpeed[0], wheelSpeed[1], wheelSpeed[2], wheelSpeed[3]);
         };
 
         wheelSpeed[0] = 0;
@@ -365,7 +363,7 @@ public class Center_Stage_AutoRLBR extends LinearOpMode {
         wheelSpeed[2] = 0;
         wheelSpeed[3] = 0;
 
-        motorSetSpeed(wheelSpeed[0], wheelSpeed[1], wheelSpeed[2], wheelSpeed[3]);
+        motorSetSpeed(wheelSpeed[0], wheelSpeed[1], -wheelSpeed[2], -wheelSpeed[3]);
     };
 
     public void turn (double target, double speedPercent, double error) {

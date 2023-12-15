@@ -20,8 +20,6 @@ public class Center_Stage_Teleop extends LinearOpMode {
     public DcMotor back_right;
     public DcMotor lift;
     public DcMotor liftrot;
-  //  public DcMotor arm;
-    public Servo boxRot;
     public Servo drone;
 
 
@@ -43,21 +41,16 @@ public class Center_Stage_Teleop extends LinearOpMode {
         back_right = hardwareMap.get(DcMotor.class, "back_right");
         lift = hardwareMap.get(DcMotor.class, "lift");
         liftrot = hardwareMap.get(DcMotor.class, "liftrot");
-        boxRot = hardwareMap.get(Servo.class, "boxRot");
         drone = hardwareMap.get(Servo.class, "drone");
-      //  arm = hardwareMap.get(DcMotor.class, "arm");
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
         front_right.setDirection(DcMotorSimple.Direction.FORWARD);
-        back_left.setDirection(DcMotorSimple.Direction.FORWARD);
+        back_left.setDirection(DcMotorSimple.Direction.REVERSE);
         front_left.setDirection(DcMotorSimple.Direction.REVERSE);
-        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_right.setDirection(DcMotorSimple.Direction.FORWARD);
         lift.setDirection(DcMotorSimple.Direction.FORWARD);
         liftrot.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        //arm.setDirection(DcMotorSimple.Direction.FORWARD);
-        //arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -65,8 +58,6 @@ public class Center_Stage_Teleop extends LinearOpMode {
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         liftrot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-       //arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         BNO055IMU imu;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -89,15 +80,15 @@ public class Center_Stage_Teleop extends LinearOpMode {
 
         while (opModeIsActive()) {
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = -gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
             if(gamepad1.right_bumper) {
                 offset = -botHeading;
             }
             botHeading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle + offset;
             // Rotate the movement direction counter to the bot's rotation
-            double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
-            double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
+            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
             double armPower = -gamepad2.left_stick_y;
 
@@ -110,12 +101,6 @@ public class Center_Stage_Teleop extends LinearOpMode {
         if(gamepad2.x) {
             liftrot.setPower(1);
         }
-        if(gamepad2.a) {
-            boxRot.setPosition(boxRot.getPosition() + 0.001);
-        }
-        if(gamepad2.b) {
-                boxRot.setPosition(boxRot.getPosition() - 0.001);
-        }
 
         if(gamepad2.right_bumper) {
             drone.setPosition(0.1);
@@ -123,16 +108,11 @@ public class Center_Stage_Teleop extends LinearOpMode {
         if (gamepad2.left_bumper) {
             drone.setPosition(0.9);
         }
-     //   if(gamepad2.right_trigger > 0.01) {
-     //           arm.setPower(0.4 * armPower);
-      //  } else {
-      //      arm.setPower(0.8 * armPower);
-     //   }
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             double frontLeftPower = (rotY + rotX + rx) / denominator;
-            double backLeftPower = (rotY + rotX - rx) / denominator;
+            double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
-            double backRightPower = (rotY - rotX + rx) / denominator;
+            double backRightPower = (rotY + rotX - rx) / denominator;
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
