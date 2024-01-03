@@ -89,17 +89,19 @@ public class Center_Stage_Teleop extends LinearOpMode {
             // Rotate the movement direction counter to the bot's rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-
-            double armPower = -gamepad2.left_stick_y;
+            
 
         if(gamepad2.dpad_up) {
             lift.setPower(0.95);
-        }
-        if(gamepad2.dpad_down) {
+        } else if(gamepad2.dpad_down) {
             lift.setPower(-0.95);
+        } else {
+            lift.setPower(0);
         }
         if(gamepad2.x) {
             liftrot.setPower(1);
+        } else {
+            liftrot.setPower(0);
         }
 
         if(gamepad2.right_bumper) {

@@ -162,10 +162,12 @@ public class Center_Stage_AutoRR extends LinearOpMode {
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
                     driveSBTest(1035, 0.4, 5, 0, 5);
                     sleep(500);
-                    driveSBTest(-975, 0.4, 5, 0, 5);
+                    driveSBTest(-950, 0.4, 5, 0, 5);
                     sleep(350);
                     turn(-90, 0.3, 4);
-                    driveSBTest(900, 0.6, 5, -90, 5);
+                    driveSBTest(1025, 0.6, 5, -90, 5);
+                    sleep(300);
+                    turn(0, 0.4, 2);
                     stop();
                 }
                 if (opState == 2 && opModeIsActive()) {
@@ -471,10 +473,10 @@ public class Center_Stage_AutoRR extends LinearOpMode {
             //lower cb = more blue = skystone = white
             //higher cb = less blue = yellow stone = grey
             Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
-            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
+            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 1);//takes cb difference and stores
 
             //b&w
-            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY);
 
             //outline/contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);

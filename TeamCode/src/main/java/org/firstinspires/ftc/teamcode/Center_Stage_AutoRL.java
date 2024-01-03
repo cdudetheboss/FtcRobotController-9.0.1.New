@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name= "Center_Stage_AutoBL", group="14174")
+@Autonomous(name= "Center_Stage_AutoRL", group="14174")
 //@Disabled//comment out this line before using
-public class Center_Stage_AutoBL extends LinearOpMode {
+public class Center_Stage_AutoRL extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
@@ -162,12 +162,7 @@ public class Center_Stage_AutoBL extends LinearOpMode {
             if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
                 driveSBTest(1035, 0.4, 5, 0, 5);
                 sleep(500);
-                driveSBTest(-950, 0.4, 5, 0, 5);
-                sleep(350);
-                turn(90, 0.3, 4);
-                driveSBTest(1025, 0.6, 5, 90, 5);
-                sleep(300);
-                turn(0,0.4, 2);
+                driveSBTest(-975, 0.4, 5, 0, 5);
                 stop();
             }
             if (opState == 2 && opModeIsActive()) {
@@ -476,7 +471,7 @@ public class Center_Stage_AutoBL extends LinearOpMode {
             Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 1);//takes cb difference and stores
 
             //b&w
-            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY);
 
             //outline/contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
