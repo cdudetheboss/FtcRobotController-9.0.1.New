@@ -14,11 +14,6 @@ public class CenterStage_Hardware
     public DcMotor back_left;
     public DcMotor back_right;
     // Servo&Motor Numbers
-    public static double collectPos = 0.3;
-    public static double depositPos = 0.8;
-    public static double dropPos = 0.1;
-    public static int armin = 0;
-    public static int armOut = 500;
 
     /* local OpMode members. */
     HardwareMap hwMap =  null;

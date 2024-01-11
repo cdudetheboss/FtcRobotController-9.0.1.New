@@ -31,15 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name= "Center_Stage_AutoRR", group="14174")
+@Autonomous(name= "Center_Stage_AutoRedRight", group="14174")
 //@Disabled//comment out this line before using
 public class Center_Stage_AutoRR extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
-    //0 means skystone, 1 means yellow stone
     //-1 for debug, but we can keep it like this because if it works, it should change to either 0 or 255
-    private static int valBot = -1;
-    private static int valTop = -1;
+    private static int valLeft = -1;
+    private static int valRight = -1;
 
 
 
@@ -50,8 +49,8 @@ public class Center_Stage_AutoRR extends LinearOpMode {
     private static float offsetX = 0.25f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private static float offsetY = -0.5f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
-    private static float[] botPos = {5.1f/8f+offsetX, 5.5f/8f+offsetY};//0 = col, 1 = row
-    private static float[] topPos = {5.1f/8f+offsetX, 4.2f/8f+offsetY};
+    private static float[] leftPos = {2f/8f+offsetX, 4.2f/8f+offsetY};//0 = col, 1 = row
+    private static float[] rightPos = {6f/8f+offsetX, 4.2f/8f+offsetY};
     //moves all rectangles right or left by amount. units are in ratio to monitor
 
     private final int rows = 640;
@@ -59,9 +58,8 @@ public class Center_Stage_AutoRR extends LinearOpMode {
 
     OpenCvWebcam depositcam; //EOCV Depo Cam
 
+    //Declare hardware map thingy
     CenterStage_Hardware robot = new CenterStage_Hardware();
-
-    // Declare OpMode members.
 
     //Declare Sensors
     BNO055IMU imu;
@@ -73,7 +71,7 @@ public class Center_Stage_AutoRR extends LinearOpMode {
     double headingResetValue;
     int detv;
     int heading;
-
+    //^Some of these may not be used but we keep them because we're scared to remove them^
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -87,11 +85,13 @@ public class Center_Stage_AutoRR extends LinearOpMode {
         //width, height
         //width = height in this case, because camera is in portrait mode.
 
+        //turn on hardware map
         robot.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        //Set motor directions
         robot.front_left.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.front_right.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.back_left.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -108,20 +108,19 @@ public class Center_Stage_AutoRR extends LinearOpMode {
 
         //Reset Encoders
         robot.front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         robot.front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
+        //robot.back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //Commented out because the wire broke and we didn't use it for this auto program
         idle();
 
         //Set the Run Mode For The Motors
-         //Controls the speed of the motors to be consistent even at different battery levels
+        //Controls the speed of the motors to be consistent even at different battery levels
         robot.front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
+        //set zero power behavior
         robot.back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -144,18 +143,21 @@ public class Center_Stage_AutoRR extends LinearOpMode {
         //waitForStart();
         runtime.reset();
 
+        //Displays camera values while initialized
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Status:", "Waiting for start command.");
-            telemetry.addData("Values", valBot + "   " + valTop);
+            telemetry.addData("Values", valLeft + "   " + valRight);
             telemetry.update();
         }
         ;
         runtime.reset();
         while (opModeIsActive()) {
-            telemetry.addData("Values", valBot + "   " + valTop);
+            telemetry.addData("Values", valLeft + "   " + valRight);
 
             //DEGREES ARE FLIPPED "-" TURNS RIGHT AND "+" TURNS LEFT
 
+            //CUBE ON MIDDLE AUTO
+            if(valLeft == 255 && valRight == 0) {
                 depositcam.closeCameraDevice();
 
                 opState++;
@@ -168,13 +170,62 @@ public class Center_Stage_AutoRR extends LinearOpMode {
                     driveSBTest(1025, 0.6, 5, -90, 5);
                     sleep(300);
                     turn(0, 0.4, 2);
+                    sleep(100);
                     stop();
                 }
                 if (opState == 2 && opModeIsActive()) {
 
                 }
+            }//CUBE ON MIDDLE AUTO ENDS
 
-        }
+
+            //CUBE ON RIGHT AUTO
+            if(valLeft == 0 && valRight == 255) {
+                depositcam.closeCameraDevice();
+
+                opState++;
+                if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
+                    turn(-45, 0.4, 3);
+                    driveSBTest(1035, 0.4, 5, -45, 5);
+                    sleep(500);
+                    driveSBTest(-950, 0.4, 5, -45, 5);
+                    sleep(350);
+                    turn(-90, 0.3, 4);
+                    driveSBTest(1025, 0.6, 5, -90, 5);
+                    sleep(300);
+                    turn(0, 0.4, 2);
+                    sleep(100);
+                    stop();
+                }
+                if (opState == 2 && opModeIsActive()) {
+
+                }
+            }//CUBE ON RIGHT AUTO ENDS
+
+
+            //CUBE ON LEFT AUTO
+            if(valLeft == 0 && valRight == 0) {
+                depositcam.closeCameraDevice();
+
+                opState++;
+                if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
+                    turn(45, 0.4, 3);
+                    driveSBTest(1035, 0.4, 5, 45, 5);
+                    sleep(500);
+                    driveSBTest(-950, 0.4, 5, 45, 5);
+                    sleep(350);
+                    turn(-90, 0.3, 4);
+                    driveSBTest(1025, 0.6, 5, -90, 5);
+                    sleep(300);
+                    turn(0, 0.4, 2);
+                    sleep(100);
+                    stop();
+                }
+                if (opState == 2 && opModeIsActive()) {
+
+                }
+            } //CUBE ON RIGHT AUTO ENDS
+        }//WHILE OP MODE IS ACTIVE ENDS
     }
     //FUNCTIONS
     public void driveSBTest (double duration, double speedPercent, double error, double heading, double time) {
@@ -477,6 +528,8 @@ public class Center_Stage_AutoRR extends LinearOpMode {
 
             //b&w
             Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY);
+            //CHANGE TO "THRESH_BINARY_INV" FOR BLUE DETECTION
+            //It works because I tried it and it did, someone smarter than me knows the real answer
 
             //outline/contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -485,19 +538,19 @@ public class Center_Stage_AutoRR extends LinearOpMode {
 
 
             //get values from frame
-            double[] pixbot = thresholdMat.get((int)(input.rows()* botPos[1]), (int)(input.cols()* botPos[0]));//gets value at circle
-            valBot = (int)pixbot[0];
+            double[] pixbot = thresholdMat.get((int)(input.rows()* leftPos[1]), (int)(input.cols()* leftPos[0]));//gets value at circle
+            valLeft = (int)pixbot[0];
 
-            double[] pixtop = thresholdMat.get((int)(input.rows()* topPos[1]), (int)(input.cols()* topPos[0]));//gets value at circle
-            valTop = (int)pixtop[0];
+            double[] pixtop = thresholdMat.get((int)(input.rows()* rightPos[1]), (int)(input.cols()* rightPos[0]));//gets value at circle
+            valRight = (int)pixtop[0];
 
             //create three points
-            Point pointbot = new Point((int)(input.cols()* botPos[0]), (int)(input.rows()* botPos[1]));
-            Point pointtop = new Point((int)(input.cols()* topPos[0]), (int)(input.rows()* topPos[1]));
+            Point pointbot = new Point((int)(input.cols()* leftPos[0]), (int)(input.rows()* leftPos[1]));
+            Point pointtop = new Point((int)(input.cols()* rightPos[0]), (int)(input.rows()* rightPos[1]));
 
             //draw circles on those points
-            Imgproc.circle(all, pointbot,5, new Scalar( 255, 0, 0 ),1 );//draws circle
-            Imgproc.circle(all, pointtop,5, new Scalar( 255, 0, 0 ),1 );//draws circle
+            Imgproc.circle(all, pointbot,5, new Scalar(255, 0, 0 ),1 );//draws circle
+            Imgproc.circle(all, pointtop,5, new Scalar(255, 0, 0 ),1 );//draws circle
 
             //draw 3 rectangles
             /*
@@ -515,20 +568,20 @@ public class Center_Stage_AutoRR extends LinearOpMode {
             Imgproc.rectangle(//3-5
                     all,
                     new Point(
-                            input.cols()*(botPos[0]-rectWidth/2),
-                            input.rows()*(botPos[1]-rectHeight/2)),
+                            input.cols()*(leftPos[0]-rectWidth/2),
+                            input.rows()*(leftPos[1]-rectHeight/2)),
                     new Point(
-                            input.cols()*(botPos[0]+rectWidth/2),
-                            input.rows()*(botPos[1]+rectHeight/2)),
+                            input.cols()*(leftPos[0]+rectWidth/2),
+                            input.rows()*(leftPos[1]+rectHeight/2)),
                     new Scalar(0, 255, 0), 3);
             Imgproc.rectangle(//5-7
                     all,
                     new Point(
-                            input.cols()*(topPos[0]-rectWidth/2),
-                            input.rows()*(topPos[1]-rectHeight/2)),
+                            input.cols()*(rightPos[0]-rectWidth/2),
+                            input.rows()*(rightPos[1]-rectHeight/2)),
                     new Point(
-                            input.cols()*(topPos[0]+rectWidth/2),
-                            input.rows()*(topPos[1]+rectHeight/2)),
+                            input.cols()*(rightPos[0]+rectWidth/2),
+                            input.rows()*(rightPos[1]+rectHeight/2)),
                     new Scalar(0, 255, 0), 3);
 
             switch (stageToRenderToViewport)

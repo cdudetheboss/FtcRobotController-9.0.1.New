@@ -20,15 +20,13 @@ public class Center_Stage_Teleop extends LinearOpMode {
     public DcMotor back_right;
     public DcMotor lift;
     public DcMotor liftrot;
+    public DcMotor slidesrot;
+    public DcMotor slides;
     public Servo drone;
-
-
-
+    public Servo collection;
     double botHeading = 0;
     double offset = 0;
 
-    double droneKeep = 0.3;
-    double droneGo = 0.8;
 
 
     double headingResetValue;
@@ -41,7 +39,10 @@ public class Center_Stage_Teleop extends LinearOpMode {
         back_right = hardwareMap.get(DcMotor.class, "back_right");
         lift = hardwareMap.get(DcMotor.class, "lift");
         liftrot = hardwareMap.get(DcMotor.class, "liftrot");
+        slides = hardwareMap.get(DcMotor.class, "slides");
+        slidesrot = hardwareMap.get(DcMotor.class, "slidesrot");
         drone = hardwareMap.get(Servo.class, "drone");
+        collection = hardwareMap.get(Servo.class, "collection");
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
         front_right.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -50,7 +51,8 @@ public class Center_Stage_Teleop extends LinearOpMode {
         back_right.setDirection(DcMotorSimple.Direction.FORWARD);
         lift.setDirection(DcMotorSimple.Direction.FORWARD);
         liftrot.setDirection(DcMotorSimple.Direction.FORWARD);
-
+        slides.setDirection(DcMotorSimple.Direction.FORWARD);
+        slidesrot.setDirection(DcMotorSimple.Direction.FORWARD);
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -58,6 +60,8 @@ public class Center_Stage_Teleop extends LinearOpMode {
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         liftrot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        slidesrot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         BNO055IMU imu;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -89,7 +93,25 @@ public class Center_Stage_Teleop extends LinearOpMode {
             // Rotate the movement direction counter to the bot's rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-            
+
+            double slidespower = -gamepad2.left_stick_y;
+            slides.setPower(slidespower);
+
+           if(gamepad2.a) {
+               if(gamepad2.left_trigger > 0.01) {
+                   slidesrot.setPower(0.3);
+               } else {
+                   slidesrot.setPower(0.9);
+               }
+           }
+           if(gamepad2.b) {
+                if(gamepad2.left_trigger > 0.01) {
+                    slidesrot.setPower(-0.3);
+                } else {
+                    slidesrot.setPower(-0.9);
+                }
+           }
+
 
         if(gamepad2.dpad_up) {
             lift.setPower(0.95);
@@ -103,11 +125,17 @@ public class Center_Stage_Teleop extends LinearOpMode {
         } else {
             liftrot.setPower(0);
         }
-
         if(gamepad2.right_bumper) {
+            collection.setPosition(collection.getPosition() + 0.05);
+        }
+        if(gamepad2.left_bumper) {
+            collection.setPosition(collection.getPosition() + 0.05);
+        }
+
+        if(gamepad1.a) {
             drone.setPosition(0.1);
         }
-        if (gamepad2.left_bumper) {
+        if (gamepad1.b) {
             drone.setPosition(0.9);
         }
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
@@ -131,7 +159,6 @@ public class Center_Stage_Teleop extends LinearOpMode {
                 front_right.setPower(frontRightPower);
                 back_right.setPower(backRightPower);
             }
-
 
 
 
