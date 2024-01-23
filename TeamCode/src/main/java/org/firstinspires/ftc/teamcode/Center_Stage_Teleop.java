@@ -94,23 +94,15 @@ public class Center_Stage_Teleop extends LinearOpMode {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-            double slidespower = -gamepad2.left_stick_y;
+            double slidesrotpower = -gamepad2.right_stick_y;
+            double slidespower = gamepad2.left_stick_y;
             slides.setPower(slidespower);
 
-           if(gamepad2.a) {
-               if(gamepad2.left_trigger > 0.01) {
-                   slidesrot.setPower(0.3);
-               } else {
-                   slidesrot.setPower(0.9);
-               }
-           }
-           if(gamepad2.b) {
-                if(gamepad2.left_trigger > 0.01) {
-                    slidesrot.setPower(-0.3);
-                } else {
-                    slidesrot.setPower(-0.9);
-                }
-           }
+            if(gamepad2.right_trigger>0.01) {
+                slidesrot.setPower(0.25);
+            } else {
+                slidesrot.setPower(slidesrotpower);
+            }
 
 
         if(gamepad2.dpad_up) {
@@ -121,15 +113,15 @@ public class Center_Stage_Teleop extends LinearOpMode {
             lift.setPower(0);
         }
         if(gamepad2.x) {
-            liftrot.setPower(1);
+            liftrot.setPower(-1);
         } else {
             liftrot.setPower(0);
         }
         if(gamepad2.right_bumper) {
-            collection.setPosition(collection.getPosition() + 0.05);
+            collection.setPosition(collection.getPosition() + 0.01);
         }
         if(gamepad2.left_bumper) {
-            collection.setPosition(collection.getPosition() + 0.05);
+            collection.setPosition(collection.getPosition() - 0.01);
         }
 
         if(gamepad1.a) {

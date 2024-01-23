@@ -524,12 +524,11 @@ public class Center_Stage_AutoRR extends LinearOpMode {
             //lower cb = more blue = skystone = white
             //higher cb = less blue = yellow stone = grey
             Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
-            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 1);//takes cb difference and stores
-
+            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
+            //coi is 2 for red detection
             //b&w
-            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY);
-            //CHANGE TO "THRESH_BINARY_INV" FOR BLUE DETECTION
-            //It works because I tried it and it did, someone smarter than me knows the real answer
+            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
+
 
             //outline/contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);

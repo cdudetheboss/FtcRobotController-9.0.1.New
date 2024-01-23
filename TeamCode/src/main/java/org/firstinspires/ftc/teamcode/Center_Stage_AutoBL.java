@@ -525,11 +525,10 @@ public class Center_Stage_AutoBL extends LinearOpMode {
             //higher cb = less blue = yellow stone = grey
             Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
             Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 1);//takes cb difference and stores
-
+            //coi is 1 for blue detection
             //b&w
             Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
-            //CHANGE TO "THRESH_BINARY" (Not inverted) FOR RED DETECTION
-            //Trust me it works
+
 
             //outline/contour
             Imgproc.findContours(thresholdMat, contoursList, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);

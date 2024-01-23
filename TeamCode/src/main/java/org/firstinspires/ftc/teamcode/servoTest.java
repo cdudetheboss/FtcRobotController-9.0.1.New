@@ -33,8 +33,8 @@ public class servoTest extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        Servo1 = hardwareMap.servo.get("plug");
-        Servo2 = hardwareMap.servo.get("plugArm");
+        Servo1 = hardwareMap.servo.get("collection");
+
         //Servo3 = hardwareMap.servo.get("NAME");
         //Servo4 = hardwareMap.servo.get("NAME");
 
@@ -44,7 +44,6 @@ public class servoTest extends LinearOpMode {
         runtime.reset();
         //Servo2.setDirection(Servo.Direction.FORWARD);
         Servo1.setDirection(Servo.Direction.FORWARD);
-        Servo2.setDirection(Servo.Direction.FORWARD);
         //Servo1.setPosition(0.5);
 
 
@@ -68,18 +67,6 @@ public class servoTest extends LinearOpMode {
                 Servo1.setPosition(Servo1.getPosition() - .001);
                 telemetry.addData("Servo1 Position", Servo1.getPosition());
                 telemetry.addData("Direction", Servo1.getDirection());
-                telemetry.update();
-            }
-             if (gamepad1.x) {
-                Servo2.setPosition(Servo2.getPosition() + .001);
-                telemetry.addData("Servo2 Position", Servo2.getPosition());
-                telemetry.addData("Direction", Servo2.getDirection());
-                telemetry.update();
-            }
-            if (gamepad1.y) {
-                Servo2.setPosition(Servo2.getPosition() - .001);
-                telemetry.addData("Servo2 Position", Servo2.getPosition());
-                telemetry.addData("Direction", Servo2.getDirection());
                 telemetry.update();
             }
             /*
