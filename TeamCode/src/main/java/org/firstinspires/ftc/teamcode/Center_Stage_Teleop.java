@@ -99,20 +99,20 @@ public class Center_Stage_Teleop extends LinearOpMode {
             slides.setPower(slidespower);
 
             if(gamepad2.right_trigger>0.01) {
-                slidesrot.setPower(0.25);
+                slidesrot.setPower(0.2);
             } else {
-                slidesrot.setPower(slidesrotpower);
+                slidesrot.setPower(slidesrotpower * 0.6);
             }
 
 
-        if(gamepad2.dpad_up) {
+        if(gamepad1.dpad_up) {
             lift.setPower(0.95);
-        } else if(gamepad2.dpad_down) {
+        } else if(gamepad1.dpad_down) {
             lift.setPower(-0.95);
         } else {
             lift.setPower(0);
         }
-        if(gamepad2.x) {
+        if(gamepad1.x) {
             liftrot.setPower(-1);
         } else {
             liftrot.setPower(0);

@@ -46,10 +46,10 @@ public class Center_Stage_AutoRR extends LinearOpMode {
     private static float rectHeight = .8f/8f;
     private static float rectWidth = 1.0f/8f;
 
-    private static float offsetX = 0.25f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
+    private static float offsetX = 1f/8f;//changing this moves the three rects and the three circles left or right, range : (-2, 2) not inclusive
     private static float offsetY = -0.5f/8f;//changing this moves the three rects and circles up or down, range: (-4, 4) not inclusive
 
-    private static float[] leftPos = {2f/8f+offsetX, 4.2f/8f+offsetY};//0 = col, 1 = row
+    private static float[] leftPos = {2.675f/8f+offsetX, 4.2f/8f+offsetY};//0 = col, 1 = row
     private static float[] rightPos = {6f/8f+offsetX, 4.2f/8f+offsetY};
     //moves all rectangles right or left by amount. units are in ratio to monitor
 
@@ -162,9 +162,9 @@ public class Center_Stage_AutoRR extends LinearOpMode {
 
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    driveSBTest(1035, 0.4, 5, 0, 5);
+                    driveSBTest(1050, 0.4, 5, 0, 5);
                     sleep(500);
-                    driveSBTest(-950, 0.4, 5, 0, 5);
+                    driveSBTest(-975, 0.4, 5, 0, 5);
                     sleep(350);
                     turn(-90, 0.3, 4);
                     driveSBTest(1025, 0.6, 5, -90, 5);
@@ -185,10 +185,10 @@ public class Center_Stage_AutoRR extends LinearOpMode {
 
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    turn(-45, 0.4, 3);
-                    driveSBTest(1035, 0.4, 5, -45, 5);
+                    turn(-20, 0.4, 3);
+                    driveSBTest(900, 0.4, 5, -20, 5);
                     sleep(500);
-                    driveSBTest(-950, 0.4, 5, -45, 5);
+                    driveSBTest(-825, 0.4, 5, -20, 5);
                     sleep(350);
                     turn(-90, 0.3, 4);
                     driveSBTest(1025, 0.6, 5, -90, 5);
@@ -209,12 +209,20 @@ public class Center_Stage_AutoRR extends LinearOpMode {
 
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    turn(45, 0.4, 3);
-                    driveSBTest(1035, 0.4, 5, 45, 5);
+                    driveSBTest(575, 0.4, 5, 0, 5);
                     sleep(500);
-                    driveSBTest(-950, 0.4, 5, 45, 5);
+                    turn(40, 0.4, 3);
+                    sleep(100);
+                    driveSBTest(415, 0.55, 3, 40, 4);
+                    sleep(300);
+                    driveSBTest(-415, 0.55, 3, 40, 4);
+                    sleep(300);
+                    turn(0, 0.4, 3);
+                    sleep(250);
+                    driveSBTest(-395, 0.4, 5, 0, 5);
                     sleep(350);
                     turn(-90, 0.3, 4);
+                    sleep(100);
                     driveSBTest(1025, 0.6, 5, -90, 5);
                     sleep(300);
                     turn(0, 0.4, 2);
@@ -524,10 +532,9 @@ public class Center_Stage_AutoRR extends LinearOpMode {
             //lower cb = more blue = skystone = white
             //higher cb = less blue = yellow stone = grey
             Imgproc.cvtColor(input, yCbCrChan2Mat, Imgproc.COLOR_RGB2YCrCb);//converts rgb to ycrcb
-            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 2);//takes cb difference and stores
-            //coi is 2 for red detection
+            Core.extractChannel(yCbCrChan2Mat, yCbCrChan2Mat, 0);//takes cb difference and stores
             //b&w
-            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 102, 255, Imgproc.THRESH_BINARY_INV);
+            Imgproc.threshold(yCbCrChan2Mat, thresholdMat, 107, 255, Imgproc.THRESH_BINARY_INV);
 
 
             //outline/contour
