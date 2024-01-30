@@ -26,8 +26,10 @@ public class Center_Stage_Teleop extends LinearOpMode {
     public Servo collection;
     double botHeading = 0;
     double offset = 0;
-
-
+    int slidesdown = 0;
+    int slidesmed = 350;
+    int slideshigh = 550;
+    int count = 0;
 
     double headingResetValue;
     public void runOpMode() throws InterruptedException {
@@ -54,15 +56,20 @@ public class Center_Stage_Teleop extends LinearOpMode {
         slides.setDirection(DcMotorSimple.Direction.FORWARD);
         slidesrot.setDirection(DcMotorSimple.Direction.FORWARD);
 
+
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         liftrot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        slidesrot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slidesrot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        slidesrot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slidesrot.setTargetPosition(slidesdown);
+        slidesrot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        collection.setPosition(0);
         BNO055IMU imu;
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         // Retrieve the IMU from the hardware map
@@ -94,16 +101,27 @@ public class Center_Stage_Teleop extends LinearOpMode {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-            double slidesrotpower = -gamepad2.right_stick_y;
             double slidespower = gamepad2.left_stick_y;
             slides.setPower(slidespower);
 
-            if(gamepad2.right_trigger>0.01) {
-                slidesrot.setPower(0.2);
-            } else {
-                slidesrot.setPower(slidesrotpower * 0.6);
+            if(gamepad2.a) {
+                slidesrot.setTargetPosition(slidesdown);
+                slidesrot.setPower(0);
+            } else if (gamepad2.x) {
+                slidesrot.setTargetPosition(slidesmed);
+                slidesrot.setPower(0.415);
+            } else if(gamepad2.y) {
+                slidesrot.setTargetPosition(slideshigh);
+                slidesrot.setPower(0.415);
             }
-
+            if (gamepad2.right_trigger > 0.01 && count == 0) {
+                slidesrot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                count = 1;
+            } if(gamepad2.right_trigger == 0 && count == 1) {
+                slidesrot.setTargetPosition(0);
+                slidesrot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                count = 0;
+            }
 
         if(gamepad1.dpad_up) {
             lift.setPower(0.95);
@@ -117,11 +135,17 @@ public class Center_Stage_Teleop extends LinearOpMode {
         } else {
             liftrot.setPower(0);
         }
-        if(gamepad2.right_bumper) {
-            collection.setPosition(collection.getPosition() + 0.01);
+        if(gamepad2.right_bumper && !gamepad2.b) {
+            collection.setPosition(0.05);
         }
-        if(gamepad2.left_bumper) {
+        if(gamepad2.left_bumper && !gamepad2.b) {
+            collection.setPosition(0.78);
+        }
+        if(gamepad2.b && gamepad2.right_bumper) {
             collection.setPosition(collection.getPosition() - 0.01);
+        }
+        if(gamepad2.b && gamepad2.left_bumper) {
+            collection.setPosition(collection.getPosition() + 0.01);
         }
 
         if(gamepad1.a) {
@@ -159,6 +183,8 @@ public class Center_Stage_Teleop extends LinearOpMode {
 
             telemetry.addData("Status", "Running");
             telemetry.addData("heading", (Math.toDegrees(botHeading)));
+            telemetry.addData("slidesrot", slidesrot.getCurrentPosition());
+            telemetry.addData("collectionpos", collection.getPosition());
             telemetry.update();
         }
     }

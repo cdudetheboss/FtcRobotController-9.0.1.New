@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,23 +19,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Servo Test", group="14174")
+@Autonomous(name="Servo and motor Test", group="14174")
 //@Disabled
-public class servoTest extends LinearOpMode {
+public class ServoAndMotorTest extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     Servo Servo1;
     Servo Servo2;
     Servo Servo3;
     Servo Servo4;
-
+    DcMotor Motor1;
+    double Motor1Power = 0;
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         Servo1 = hardwareMap.servo.get("collection");
-
+        Motor1 = hardwareMap.dcMotor.get("slidesrot");
         //Servo3 = hardwareMap.servo.get("NAME");
         //Servo4 = hardwareMap.servo.get("NAME");
 
@@ -55,7 +57,10 @@ public class servoTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+            //gamepad 1 for servos gamepad 2 for motors
 
+            Motor1Power = -gamepad2.left_stick_y;
+            Motor1.setPower(Motor1Power);
 
             if (gamepad1.a) {
                 Servo1.setPosition(Servo1.getPosition() + .001);

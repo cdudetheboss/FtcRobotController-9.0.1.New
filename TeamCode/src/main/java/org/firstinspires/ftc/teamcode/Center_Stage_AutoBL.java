@@ -108,7 +108,6 @@ public class Center_Stage_AutoBL extends LinearOpMode {
 
         //Reset Encoders
         robot.front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //robot.back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //Commented out because the wire broke and we didn't use it for this auto program
@@ -118,7 +117,6 @@ public class Center_Stage_AutoBL extends LinearOpMode {
         //Controls the speed of the motors to be consistent even at different battery levels
         robot.front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //set zero power behavior
         robot.back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
