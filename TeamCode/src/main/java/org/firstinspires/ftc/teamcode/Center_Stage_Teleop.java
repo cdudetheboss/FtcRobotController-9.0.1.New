@@ -24,12 +24,15 @@ public class Center_Stage_Teleop extends LinearOpMode {
     public DcMotor slides;
     public Servo drone;
     public Servo collection;
+    public Servo collectionDrop;
     double botHeading = 0;
     double offset = 0;
     int slidesdown = 0;
-    int slidesmed = 350;
-    int slideshigh = 550;
+    int slidesmed = 260;
+    int slidesmedhigh = 350;
+    int slideshigh = 430;
     int count = 0;
+
 
     double headingResetValue;
     public void runOpMode() throws InterruptedException {
@@ -45,6 +48,7 @@ public class Center_Stage_Teleop extends LinearOpMode {
         slidesrot = hardwareMap.get(DcMotor.class, "slidesrot");
         drone = hardwareMap.get(Servo.class, "drone");
         collection = hardwareMap.get(Servo.class, "collection");
+        collectionDrop = hardwareMap.get(Servo.class, "collectionDrop");
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
         front_right.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -101,7 +105,7 @@ public class Center_Stage_Teleop extends LinearOpMode {
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-            double slidespower = gamepad2.left_stick_y;
+            double slidespower = -gamepad2.left_stick_y;
             slides.setPower(slidespower);
 
             if(gamepad2.a) {
@@ -112,9 +116,12 @@ public class Center_Stage_Teleop extends LinearOpMode {
                 slidesrot.setPower(0.415);
             } else if(gamepad2.y) {
                 slidesrot.setTargetPosition(slideshigh);
+                slidesrot.setPower(0.37);
+            } else if(gamepad2.b) {
+                slidesrot.setTargetPosition(slidesmedhigh);
                 slidesrot.setPower(0.415);
             }
-            if (gamepad2.right_trigger > 0.01 && count == 0) {
+            if (gamepad2.right_trigger > 0.1 && count == 0) {
                 slidesrot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 count = 1;
             } if(gamepad2.right_trigger == 0 && count == 1) {
@@ -135,24 +142,26 @@ public class Center_Stage_Teleop extends LinearOpMode {
         } else {
             liftrot.setPower(0);
         }
-        if(gamepad2.right_bumper && !gamepad2.b) {
+        if(gamepad2.right_bumper) {
+            collection.setPosition(0.26);
+        }
+        if(gamepad2.left_bumper) {
+            collection.setPosition(0.65);
+        }
+        if(gamepad2.dpad_down) {
             collection.setPosition(0.05);
         }
-        if(gamepad2.left_bumper && !gamepad2.b) {
-            collection.setPosition(0.78);
-        }
-        if(gamepad2.b && gamepad2.right_bumper) {
-            collection.setPosition(collection.getPosition() - 0.01);
-        }
-        if(gamepad2.b && gamepad2.left_bumper) {
-            collection.setPosition(collection.getPosition() + 0.01);
+        if(gamepad1.y) {
+            collectionDrop.setPosition(0.05);
+        } else {
+            collectionDrop.setPosition(0.6);
         }
 
         if(gamepad1.a) {
-            drone.setPosition(0.1);
+            drone.setPosition(0.275);
         }
         if (gamepad1.b) {
-            drone.setPosition(0.9);
+            drone.setPosition(0.625);
         }
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             double frontLeftPower = (rotY + rotX + rx) / denominator;

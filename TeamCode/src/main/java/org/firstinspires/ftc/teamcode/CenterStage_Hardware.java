@@ -13,6 +13,10 @@ public class CenterStage_Hardware
     public DcMotor front_right;
     public DcMotor back_left;
     public DcMotor back_right;
+    public DcMotor slides;
+    public DcMotor slidesrot;
+    public Servo collection;
+    public Servo collectionDrop;
     // Servo&Motor Numbers
 
     /* local OpMode members. */
@@ -35,6 +39,10 @@ public class CenterStage_Hardware
         front_right = hwMap.get(DcMotor.class, "front_right");
         back_left = hwMap.get(DcMotor.class, "back_left");
         back_right = hwMap.get(DcMotor.class, "back_right");
+        collection = hwMap.get(Servo.class, "collection");
+        collectionDrop = hwMap.get(Servo.class, "collectionDrop");
+        slides = hwMap.get(DcMotor.class, "slides");
+        slidesrot = hwMap.get(DcMotor.class, "slidesrot");
 
 
 

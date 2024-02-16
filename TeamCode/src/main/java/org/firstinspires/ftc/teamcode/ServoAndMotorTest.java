@@ -35,7 +35,7 @@ public class ServoAndMotorTest extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        Servo1 = hardwareMap.servo.get("collection");
+        Servo1 = hardwareMap.servo.get("drone");
         Motor1 = hardwareMap.dcMotor.get("slidesrot");
         //Servo3 = hardwareMap.servo.get("NAME");
         //Servo4 = hardwareMap.servo.get("NAME");
