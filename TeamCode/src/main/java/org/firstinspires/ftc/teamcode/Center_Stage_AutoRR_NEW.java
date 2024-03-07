@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name= "Center_Stage_AutoRedLeft", group="14174")
+@Autonomous(name= "RedRight2+0 (NEW)", group="14174")
 //@Disabled//comment out this line before using
-public class Center_Stage_AutoRL extends LinearOpMode {
+public class Center_Stage_AutoRR_NEW extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //-1 for debug, but we can keep it like this because if it works, it should change to either 0 or 255
@@ -55,11 +55,14 @@ public class Center_Stage_AutoRL extends LinearOpMode {
 
     private final int rows = 640;
     private final int cols = 480;
+    //slides rotation numbers
+    private int slidesdown = 0;
+    private int slidesup = 280;
 
     OpenCvWebcam depositcam; //EOCV Depo Cam
 
     //Declare hardware map thingy
-    CenterStage_Hardware robot = new CenterStage_Hardware();
+    Center_Stage_Hardware robot = new Center_Stage_Hardware();
 
     //Declare Sensors
     BNO055IMU imu;
@@ -96,7 +99,8 @@ public class Center_Stage_AutoRL extends LinearOpMode {
         robot.front_right.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.back_left.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.back_right.setDirection(DcMotorSimple.Direction.FORWARD);
-
+        robot.slides.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.slidesrot.setDirection(DcMotorSimple.Direction.FORWARD);
         //CODE FOR SETTING UP AND INITIALIZING IMU
         BNO055IMU.Parameters parameters2 = new BNO055IMU.Parameters();
         parameters2.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -116,11 +120,19 @@ public class Center_Stage_AutoRL extends LinearOpMode {
         //Controls the speed of the motors to be consistent even at different battery levels
         robot.front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        //slides motor stuff
+        robot.slidesrot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.slidesrot.setTargetPosition(slidesdown);
+        robot.slidesrot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         //set zero power behavior
         robot.back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.slides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.slidesrot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
 
         //DEFINE SENSORS
@@ -155,13 +167,38 @@ public class Center_Stage_AutoRL extends LinearOpMode {
             //CUBE ON MIDDLE AUTO
             if(valLeft == 255 && valRight == 0) {
                 depositcam.closeCameraDevice();
-
+                robot.collection.setPosition(0.05);
+                robot.collectionDrop.setPosition(0.83);
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    driveSBTest(1050, 0.4, 5, 0, 5);
+                    driveSBTest(1080, 0.4, 5, 0, 5);
                     sleep(500);
-                    driveSBTest(-975, 0.4, 5, 0, 5);
+                    driveSBTest(-70, 0.4, 5, 0, 5);
                     sleep(350);
+                    turn(-90, 0.3, 4);
+                    sleep(350);
+                    driveSBTest(1150, 0.4, 5, -90, 5);
+                    sleep(300);
+                    robot.slidesrot.setTargetPosition(slidesup);
+                    robot.slidesrot.setPower(0.5);
+                    sleep(1000);
+                    robot.slides.setPower(0.8);
+                    robot.collection.setPosition(0.26);
+                    sleep(1000);
+                    robot.slides.setPower(0);
+                    robot.collectionDrop.setPosition(0.2);
+                    sleep(1000);
+                    robot.slides.setPower(-0.8);
+                    robot.slidesrot.setTargetPosition(slidesup+50);
+                    sleep(750);
+                    robot.collectionDrop.setPosition(0.83);
+                    robot.slides.setPower(0);
+                    robot.slidesrot.setTargetPosition(slidesdown);
+                    robot.slidesrot.setPower(0.2);
+                    sleep(1000);
+                    driveLRTest(1250, 0.4, 5, -90, 5);
+                    sleep(300);
+                    turn(0, 0.3, 3);
                     stop();
                 }
                 if (opState == 2 && opModeIsActive()) {
@@ -173,21 +210,39 @@ public class Center_Stage_AutoRL extends LinearOpMode {
             //CUBE ON RIGHT AUTO
             if(valLeft == 0 && valRight == 255) {
                 depositcam.closeCameraDevice();
-
+                robot.collection.setPosition(0.05);
+                robot.collectionDrop.setPosition(0.83);
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    driveSBTest(600, 0.3, 5, 0, 5);
+                    turn(-20, 0.4, 3);
+                    sleep(150);
+                    driveSBTest(900, 0.4, 5, -20, 5);
                     sleep(500);
-                    turn(-44, 0.4, 3);
-                    sleep(100);
-                    driveSBTest(375, 0.55, 3, -44, 4);
+                    driveSBTest(-150, 0.4, 5, -20, 5);
                     sleep(300);
-                    driveSBTest(-375, 0.55, 3, -44, 4);
+                    turn(-90, 0.3, 4);
+                    driveSBTest(800, 0.4, 5, -90, 5);
                     sleep(300);
-                    turn(0, 0.4, 3);
-                    sleep(250);
-                    driveSBTest(-450, 0.4, 3, 0, 5);
-                    sleep(350);
+                    robot.slidesrot.setTargetPosition(slidesup);
+                    robot.slidesrot.setPower(0.5);
+                    sleep(1000);
+                    robot.slides.setPower(0.8);
+                    robot.collection.setPosition(0.26);
+                    sleep(1050);
+                    robot.slides.setPower(0);
+                    robot.collectionDrop.setPosition(0.2);
+                    sleep(1000);
+                    robot.slidesrot.setTargetPosition(slidesup+50);
+                    robot.slides.setPower(-0.8);
+                    sleep(750);
+                    robot.slides.setPower(0);
+                    robot.collectionDrop.setPosition(0.83);
+                    robot.slidesrot.setTargetPosition(slidesdown);
+                    robot.slidesrot.setPower(0.2);
+                    sleep(1000);
+                    driveLRTest(1250, 0.4, 5, -90, 5);
+                    sleep(300);
+                    turn(0, 0.3, 3);
                     stop();
                 }
                 if (opState == 2 && opModeIsActive()) {
@@ -199,22 +254,56 @@ public class Center_Stage_AutoRL extends LinearOpMode {
             //CUBE ON LEFT AUTO
             if(valLeft == 0 && valRight == 0) {
                 depositcam.closeCameraDevice();
-
+                robot.collection.setPosition(0.05);
+                robot.collectionDrop.setPosition(0.83);
                 opState++;
                 if (opState == 1 && opModeIsActive()) { //test of straight drive 100,0.5,10,0,10
-                    turn(20, 0.4, 3);
-                    driveSBTest(900, 0.4, 5, 20, 5);
+                    driveSBTest(600, 0.3, 5, 0, 5);
                     sleep(500);
-                    driveSBTest(-825, 0.4, 5, 20, 5);
-                    sleep(350);
-                    turn(0, 0.4, 2);
+                    turn(44, 0.35, 3);
                     sleep(100);
+                    driveSBTest(350, 0.45, 3, 44, 4);
+                    sleep(300);
+                    driveSBTest(-375, 0.45, 3, 44, 4);
+                    sleep(300);
+                    turn(-90, 0.35, 3);
+                    sleep(350);
+                    driveSBTest(850, 0.5, 5, -90, 5);
+                    sleep(300);
+                    turn(0, 0.35, 4);
+                    sleep(350);
+                    driveSBTest(600, 0.4, 3, 0, 5);
+                    sleep(300);
+                    turn(-90, 0.35, 5);
+                    sleep(300);
+                    driveSBTest(190, 0.2, 2, -90, 5);
+                    sleep(200);
+                    robot.slidesrot.setTargetPosition(slidesup);
+                    robot.slidesrot.setPower(0.5);
+                    sleep(1000);
+                    robot.slides.setPower(0.8);
+                    robot.collection.setPosition(0.26);
+                    sleep(1050);
+                    robot.slides.setPower(0);
+                    robot.collectionDrop.setPosition(0.2);
+                    sleep(1000);
+                    robot.slides.setPower(-0.8);
+                    robot.slidesrot.setTargetPosition(slidesup+50);
+                    sleep(750);
+                    robot.collectionDrop.setPosition(0.83);
+                    robot.slides.setPower(0);
+                    robot.slidesrot.setTargetPosition(slidesdown);
+                    robot.slidesrot.setPower(0.2);
+                    sleep(1000);
+                    driveLRTest(1400, 0.4, 5, -90, 5);
+                    sleep(300);
+                    turn(0, 0.3, 3);
                     stop();
                 }
                 if (opState == 2 && opModeIsActive()) {
 
                 }
-            } //CUBE ON RIGHT AUTO ENDS
+            } //CUBE ON LEFT AUTO ENDS
         }//WHILE OP MODE IS ACTIVE ENDS
     }
     //FUNCTIONS

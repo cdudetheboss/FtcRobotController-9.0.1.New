@@ -151,10 +151,13 @@ public class Center_Stage_Teleop extends LinearOpMode {
         if(gamepad2.dpad_down) {
             collection.setPosition(0.05);
         }
+        if(gamepad2.dpad_up) {
+            collection.setPosition(0.95);
+        }
         if(gamepad1.y) {
-            collectionDrop.setPosition(0.05);
+            collectionDrop.setPosition(0.2);
         } else {
-            collectionDrop.setPosition(0.6);
+            collectionDrop.setPosition(0.83);
         }
 
         if(gamepad1.a) {

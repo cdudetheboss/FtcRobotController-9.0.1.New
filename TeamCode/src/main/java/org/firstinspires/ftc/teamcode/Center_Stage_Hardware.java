@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class CenterStage_Hardware
+public class Center_Stage_Hardware
 {
     /* Public OpMode members. */
     //DEFINE MOTORS
@@ -24,7 +24,7 @@ public class CenterStage_Hardware
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public CenterStage_Hardware(){
+    public Center_Stage_Hardware(){
 
     }
 
