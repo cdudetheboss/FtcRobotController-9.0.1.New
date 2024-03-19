@@ -288,7 +288,7 @@ public class Center_Stage_AutoRL2_0 extends LinearOpMode {
                     turn(-90, 0.4, 3);
                     sleep(200);
                     driveSBTest(2850, 0.5, 3, -90, 5);
-                    sleep(200);
+                    sleep(5000);
                     robot.slidesrot.setTargetPosition(slidesup);
                     robot.slidesrot.setPower(0.5);
                     driveLRTest(650, 0.4, 3, -90, 5);

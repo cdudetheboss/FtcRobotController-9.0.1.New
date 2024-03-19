@@ -113,13 +113,13 @@ public class Center_Stage_Teleop extends LinearOpMode {
                 slidesrot.setPower(0);
             } else if (gamepad2.x) {
                 slidesrot.setTargetPosition(slidesmed);
-                slidesrot.setPower(0.415);
+                slidesrot.setPower(0.7);
             } else if(gamepad2.y) {
                 slidesrot.setTargetPosition(slideshigh);
-                slidesrot.setPower(0.37);
+                slidesrot.setPower(0.7);
             } else if(gamepad2.b) {
                 slidesrot.setTargetPosition(slidesmedhigh);
-                slidesrot.setPower(0.415);
+                slidesrot.setPower(0.7);
             }
             if (gamepad2.right_trigger > 0.1 && count == 0) {
                 slidesrot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
